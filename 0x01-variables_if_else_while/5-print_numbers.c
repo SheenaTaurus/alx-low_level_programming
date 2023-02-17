@@ -1,19 +1,17 @@
 #include <stdio.h>
-
 /**
- * main - Prints all strings from 0 to 9
+ * main - Entry point
  *
  * Return: Always 0 (Success)
  */
+
 int main(void)
-}
+{
 
-	int num;
+	int a;
 
-	for (num = 0; num < 10; num++)
-	printf("%d", num);
-
-	printf("\n";
-
-	return (0);
+	for (a = 0; a < 10; a++)
+	printf("%d", a);
+putchar('n');
+return (0);
 }
