@@ -1,113 +1,84 @@
 #include <stdlib.h>
-#include "main.h"
 
 /**
- *  * count_word - helper function to count the number of words in a string
- *   * @s: string to evaluate
- *    *
- *     * Return: number of words
- *      */
-
-int count_word(char *s)
-
-{
-
-		int flag, c, w;
-
-			flag = 0;
-
-				w = 0;
-
-
-
-					for (c = 0; s[c] != '\0'; c++)
-							{
-
-										if (s[c] == ' ')
-
-														flag = 0;
-
-												else if (flag == 0)
-
-															{
-																			flag = 1;
-
-																						w++;
-
-																								}
-
-													}
-
-						return (w);
-}
-/**
- * **strtow - splits a string into words
- * @str: string to split
- * Return: pointer to an array of strings (Success)
- * or NULL (Error)
+ * copychars - copies chars to buffer
+ * @b: destination buffer
+ * @start: starting char pointer
+ * @stop: ending char pointer
  */
-
-char **strtow(char *str)
-
+void copychars(char *b, char *start, char *stop)
 {
+	while (start <= stop)
+		*b++ = *start++;
+	*b = 0;
+}
 
-	char **matrix, *tmp;
+/**
+ * wordcount - counts the number of words
+ * @str: the sentence string
+ *
+ * Return: int number of words
+ */
+int wordcount(char *str)
+{
+	int words = 0, in_word = 0;
 
-	int i, k = 0, len = 0, words, c = 0, start, end;
-
-	while (*(str + len))
-
-		len++;
-
-	words = count_word(str);
-
-	if (words == 0)
-
-		return (NULL);
-
-	matrix = (char **) malloc(sizeof(char *) * (words + 1));
-
-	if (matrix == NULL)
-
-		return (NULL);
-
-	for (i = 0; i <= len; i++)
-
+	while (1)
 	{
-
-		if (str[i] == ' ' || str[i] == '\0')
-
+		if (*str == ' ' || !*str)
 		{
-			if (c)
-
-			{
-
-				end = i;
-
-				tmp = (char *) malloc(sizeof(char) * (c + 1));
-
-				if (tmp == NULL)
-
-					return (NULL);
-
-				while (start < end)
-
-					*tmp++ = str[start++];
-
-				*tmp = '\0';
-
-				matrix[k] = tmp - c;
-
-				k++;
-
-				c = 0;
-			}
+			if (in_word)
+				words++;
+			in_word = 0;
+			if (!*str)
+				break;
 		}
-
-		else if (c++ == 0)
-			start = i;
+		else
+			in_word++;
+		str++;
 	}
-	matrix[k] = NULL;
+	return (words);
+}
 
-	return (matrix);
+/**
+ * strtow - splits sentence into words
+ * @str: the sentence string
+ *
+ * Return: pointer to string array
+ */
+char **strtow(char *str)
+{
+	int words = 0, in_word = 0;
+	char **ret, *word_start;
+
+	if (!str || !*str || !wordcount(str))
+		return (NULL);
+	ret = malloc(sizeof(char *) * (wordcount(str) + 1));
+	while (1)
+	{
+		if (*str == ' ' || !*str)
+		{
+			if (in_word)
+			{
+				ret[words] = malloc(sizeof(char) * (in_word + 1));
+				if (!ret[words])
+				{
+					return (NULL);
+				}
+				copychars(ret[words], word_start, str - 1);
+				words++;
+				in_word = 0;
+			}
+			if (!*str)
+				break;
+		}
+		else
+		{
+			if (!in_word++)
+				word_start = str;
+		}
+		str++;
+	}
+	ret[words] = 0;
+	return (ret);
 }
