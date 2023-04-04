@@ -3,6 +3,9 @@
 0. Print list
 mandatory
 Write a function that prints all the elements of a listint_t list.
+Return: the number of nodes
+Format: see example
+You are allowed to use printf
 
 1. List length
 mandatory
